@@ -1,0 +1,83 @@
+[gd_scene load_steps=13 format=3 uid="uid://b8cvtcogjmqlw"]
+
+[ext_resource type="Texture2D" uid="uid://b108vfpy38cjc" path="res://assets/ship.png" id="1_dt3fl"]
+[ext_resource type="Script" path="res://player_ship/ship.gd" id="1_guf3j"]
+[ext_resource type="Script" path="res://components/move_component.gd" id="2_iux7n"]
+[ext_resource type="Script" path="res://components/move_input_component.gd" id="3_gkcjv"]
+[ext_resource type="Resource" uid="uid://bbwdo6aikc014" path="res://player_ship/ship_move_stats.tres" id="4_v2ix5"]
+[ext_resource type="Script" path="res://components/position_clamp_component.gd" id="5_f75m6"]
+[ext_resource type="Script" path="res://components/spawner_component.gd" id="7_hw1li"]
+[ext_resource type="PackedScene" uid="uid://bdxoo0de84cm" path="res://projectiles/laser.tscn" id="8_fo2j6"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xmphk"]
+atlas = ExtResource("1_dt3fl")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bbbe8"]
+atlas = ExtResource("1_dt3fl")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yqdym"]
+atlas = ExtResource("1_dt3fl")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_pn8u2"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xmphk")
+}],
+"loop": true,
+"name": &"bank_left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bbbe8")
+}],
+"loop": true,
+"name": &"bank_right",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yqdym")
+}],
+"loop": true,
+"name": &"center",
+"speed": 5.0
+}]
+
+[node name="Ship" type="Node2D"]
+script = ExtResource("1_guf3j")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_pn8u2")
+animation = &"center"
+
+[node name="MoveComponent" type="Node" parent="." node_paths=PackedStringArray("actor")]
+script = ExtResource("2_iux7n")
+actor = NodePath("..")
+
+[node name="MoveInputComponent" type="Node" parent="." node_paths=PackedStringArray("move_component")]
+script = ExtResource("3_gkcjv")
+move_component = NodePath("../MoveComponent")
+move_stats = ExtResource("4_v2ix5")
+
+[node name="PositionClampComponent" type="Node2D" parent="." node_paths=PackedStringArray("actor")]
+script = ExtResource("5_f75m6")
+actor = NodePath("..")
+
+[node name="LeftMuzzle" type="Marker2D" parent="."]
+position = Vector2(-5, -4)
+
+[node name="RightMuzzle" type="Marker2D" parent="."]
+position = Vector2(5, -4)
+
+[node name="SpawnerComponent" type="Node2D" parent="."]
+script = ExtResource("7_hw1li")
+scene = ExtResource("8_fo2j6")
+
+[node name="FireRateTimer" type="Timer" parent="."]
+wait_time = 0.4
+autostart = true

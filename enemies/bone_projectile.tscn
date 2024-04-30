@@ -1,0 +1,36 @@
+[gd_scene load_steps=6 format=3 uid="uid://cnpi52fft474r"]
+
+[ext_resource type="Texture2D" uid="uid://csmb7kcxdojf8" path="res://assets/bone.png" id="1_3r5hf"]
+[ext_resource type="Script" path="res://enemies/bone_projectile.gd" id="1_wbtqs"]
+[ext_resource type="Script" path="res://components/move_component.gd" id="2_rrixv"]
+[ext_resource type="Script" path="res://components/hitbox_component.gd" id="4_m80x2"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_sejtc"]
+radius = 3.0
+height = 22.0
+
+[node name="BoneProjectile" type="Node2D"]
+script = ExtResource("1_wbtqs")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+rotation = 1.5708
+scale = Vector2(0.02, 0.02)
+texture = ExtResource("1_3r5hf")
+
+[node name="HitboxComponent" type="Area2D" parent="."]
+collision_layer = 0
+script = ExtResource("4_m80x2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
+shape = SubResource("CapsuleShape2D_sejtc")
+
+[node name="MoveComponent" type="Node" parent="." node_paths=PackedStringArray("actor")]
+script = ExtResource("2_rrixv")
+actor = NodePath("..")
+
+[node name="VisibleOnScreenEnabler2D" type="VisibleOnScreenEnabler2D" parent="."]
+position = Vector2(0.25, 0.250001)
+scale = Vector2(0.475, 1.125)
+
+[connection signal="hit_hurtbox" from="HitboxComponent" to="." method="_on_hitbox_component_hit_hurtbox"]
+[connection signal="screen_exited" from="VisibleOnScreenEnabler2D" to="." method="_on_visible_on_screen_enabler_2d_screen_exited"]

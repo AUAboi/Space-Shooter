@@ -1,0 +1,101 @@
+[gd_scene load_steps=18 format=3 uid="uid://imk3h5jt248d"]
+
+[ext_resource type="Script" path="res://enemies/gaster_blaster.gd" id="1_2rqt2"]
+[ext_resource type="Texture2D" uid="uid://cxftm13vm03rp" path="res://assets/spr_gasterblaster_0.png" id="3_0hc0d"]
+[ext_resource type="Script" path="res://components/hitbox_component.gd" id="3_py76g"]
+[ext_resource type="Texture2D" uid="uid://bivqyxmm670gt" path="res://assets/spr_gasterblaster_1.png" id="4_yfq7h"]
+[ext_resource type="Texture2D" uid="uid://bmdlp4xpfbx2f" path="res://assets/spr_gasterblaster_2.png" id="5_wqauu"]
+[ext_resource type="Texture2D" uid="uid://c46uawxmfvs7j" path="res://assets/spr_gasterblaster_3.png" id="6_10k5m"]
+[ext_resource type="Texture2D" uid="uid://b77flko21vobn" path="res://assets/spr_gasterblaster_4.png" id="7_x33t6"]
+[ext_resource type="Texture2D" uid="uid://b0r6g4jwiwkne" path="res://assets/spr_gasterblaster_5.png" id="8_37v7u"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_r8qc2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5wgkg"]
+size = Vector2(15, 250)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hkady"]
+atlas = ExtResource("3_0hc0d")
+region = Rect2(0, 0, 42, 57)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3skhn"]
+atlas = ExtResource("4_yfq7h")
+region = Rect2(0, 0, 40, 57)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6cihj"]
+atlas = ExtResource("5_wqauu")
+region = Rect2(0, 0, 38, 57)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c2gnx"]
+atlas = ExtResource("6_10k5m")
+region = Rect2(0, 0, 43, 57)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e7m6o"]
+atlas = ExtResource("7_x33t6")
+region = Rect2(0, 0, 43, 57)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xkn4s"]
+atlas = ExtResource("8_37v7u")
+region = Rect2(0, 0, 43, 57)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_k7pgu"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hkady")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3skhn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6cihj")
+}],
+"loop": true,
+"name": &"default",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c2gnx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e7m6o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xkn4s")
+}],
+"loop": false,
+"name": &"fire",
+"speed": 6.0
+}]
+
+[node name="GasterBlaster" type="Node2D"]
+script = ExtResource("1_2rqt2")
+beam_wait_time = 1
+
+[node name="BlasterBeam" type="Node2D" parent="."]
+position = Vector2(2.5, 4)
+scale = Vector2(1e-05, 1)
+
+[node name="TextureRect" type="TextureRect" parent="BlasterBeam"]
+offset_left = -11.0
+offset_top = 6.0
+offset_right = 7.0
+offset_bottom = 256.0
+texture = SubResource("CanvasTexture_r8qc2")
+
+[node name="HitboxComponent" type="Area2D" parent="BlasterBeam"]
+collision_layer = 0
+script = ExtResource("3_py76g")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BlasterBeam/HitboxComponent"]
+position = Vector2(-2, 115)
+shape = SubResource("RectangleShape2D_5wgkg")
+disabled = true
+debug_color = Color(0.982229, 0, 0.364063, 0.42)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_k7pgu")
+autoplay = "default"
+
+[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]

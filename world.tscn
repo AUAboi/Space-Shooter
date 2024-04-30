@@ -1,0 +1,64 @@
+[gd_scene load_steps=13 format=3 uid="uid://db11qu0jllm4b"]
+
+[ext_resource type="PackedScene" uid="uid://b8cvtcogjmqlw" path="res://player_ship/ship.tscn" id="1_e2vn7"]
+[ext_resource type="Script" path="res://world.gd" id="1_ks8l5"]
+[ext_resource type="Resource" uid="uid://cv5eel4elj02k" path="res://game_stats.tres" id="2_qhcak"]
+[ext_resource type="PackedScene" uid="uid://7uwvro8un8vh" path="res://effects/space_background.tscn" id="2_uhtmn"]
+[ext_resource type="PackedScene" uid="uid://c1lrbhnml6ynp" path="res://enemies/enemy_generator.tscn" id="3_8i71e"]
+[ext_resource type="LabelSettings" uid="uid://cpdxtv4hdncma" path="res://fonts/default_label_settings.tres" id="5_2qvky"]
+[ext_resource type="Script" path="res://Level1.gd" id="6_g472p"]
+[ext_resource type="Script" path="res://components/spawner_component.gd" id="8_rktnd"]
+[ext_resource type="PackedScene" uid="uid://bfc37p6tjdbmu" path="res://enemies/boss.tscn" id="9_4ocpb"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_s2wjf"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vuh1f"]
+texture = SubResource("CanvasTexture_s2wjf")
+modulate_color = Color(1, 1, 1, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1oyx2"]
+bg_color = Color(0.107334, 0.725549, 0, 1)
+
+[node name="World" type="Node2D"]
+script = ExtResource("1_ks8l5")
+game_stats = ExtResource("2_qhcak")
+
+[node name="Ship" parent="." instance=ExtResource("1_e2vn7")]
+position = Vector2(80, 216)
+
+[node name="SpaceBackground" parent="." instance=ExtResource("2_uhtmn")]
+
+[node name="ScoreLabel" type="Label" parent="."]
+offset_right = 160.0
+offset_bottom = 16.0
+text = "Score"
+label_settings = ExtResource("5_2qvky")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Level1" type="Node" parent="."]
+process_mode = 4
+script = ExtResource("6_g472p")
+game_stats = ExtResource("2_qhcak")
+level_duration = 60.0
+
+[node name="EnemyGenerator" parent="Level1" instance=ExtResource("3_8i71e")]
+
+[node name="ProgressBar" type="ProgressBar" parent="Level1"]
+offset_right = 8.0
+offset_bottom = 240.0
+theme_override_styles/background = SubResource("StyleBoxTexture_vuh1f")
+theme_override_styles/fill = SubResource("StyleBoxFlat_1oyx2")
+fill_mode = 3
+show_percentage = false
+
+[node name="LevelTimer" type="Timer" parent="Level1"]
+
+[node name="BossSpawnerComponent" type="Node2D" parent="Level1"]
+script = ExtResource("8_rktnd")
+scene = ExtResource("9_4ocpb")
+
+[node name="Boss" parent="." instance=ExtResource("9_4ocpb")]
+position = Vector2(80, 0)
+
+[connection signal="timeout" from="Level1/LevelTimer" to="Level1" method="_on_level_timer_timeout"]
