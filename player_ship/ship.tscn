@@ -117,7 +117,7 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Ship" type="Node2D"]
+[node name="Ship" type="Node2D" groups=["player"]]
 script = ExtResource("1_guf3j")
 
 [node name="StatsComponent" type="Node" parent="."]

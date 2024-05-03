@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://imk3h5jt248d"]
+[gd_scene load_steps=21 format=3 uid="uid://imk3h5jt248d"]
 
 [ext_resource type="Script" path="res://enemies/gaster_blaster.gd" id="1_2rqt2"]
 [ext_resource type="Texture2D" uid="uid://cxftm13vm03rp" path="res://assets/spr_gasterblaster_0.png" id="3_0hc0d"]
@@ -8,6 +8,9 @@
 [ext_resource type="Texture2D" uid="uid://c46uawxmfvs7j" path="res://assets/spr_gasterblaster_3.png" id="6_10k5m"]
 [ext_resource type="Texture2D" uid="uid://b77flko21vobn" path="res://assets/spr_gasterblaster_4.png" id="7_x33t6"]
 [ext_resource type="Texture2D" uid="uid://b0r6g4jwiwkne" path="res://assets/spr_gasterblaster_5.png" id="8_37v7u"]
+[ext_resource type="AudioStream" uid="uid://bvsix3m0nola0" path="res://sounds/gasterintro.wav" id="9_iamfe"]
+[ext_resource type="Script" path="res://components/variable_pitch_audio_stream_player.gd" id="10_pjuu7"]
+[ext_resource type="AudioStream" uid="uid://bw4pj1l2iy6l1" path="res://sounds/gasterfire.wav" id="11_h7o5y"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_r8qc2"]
 
@@ -71,7 +74,6 @@ animations = [{
 
 [node name="GasterBlaster" type="Node2D"]
 script = ExtResource("1_2rqt2")
-beam_wait_time = 1
 
 [node name="BlasterBeam" type="Node2D" parent="."]
 position = Vector2(2.5, 4)
@@ -97,5 +99,16 @@ debug_color = Color(0.982229, 0, 0.364063, 0.42)
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_k7pgu")
 autoplay = "default"
+
+[node name="VariablePitchAudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_iamfe")
+autoplay = true
+bus = &"Sounds"
+script = ExtResource("10_pjuu7")
+
+[node name="FireAudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("11_h7o5y")
+bus = &"Sounds"
+script = ExtResource("10_pjuu7")
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]

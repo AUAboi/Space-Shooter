@@ -126,7 +126,7 @@ frame = 1
 frame_progress = 0.887466
 
 [node name="StatsComponent" parent="." index="2"]
-health = 200
+health = 400
 
 [node name="ScaleComponent" parent="." index="4"]
 scale_amount = Vector2(1.1, 1.1)
@@ -143,6 +143,9 @@ shape = SubResource("CircleShape2D_gotxt")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtboxComponent" index="0"]
 shape = SubResource("CircleShape2D_acf8t")
 
+[node name="ScoreComponent" parent="." index="12"]
+adjust_amount = 500
+
 [node name="States" type="Node" parent="." index="14"]
 
 [node name="MoveDownState" type="Node" parent="States" index="0"]
@@ -157,7 +160,8 @@ velocity = Vector2(0, 20)
 
 [node name="ProjectilePhaseState" type="Node" parent="States" index="1"]
 unique_name_in_owner = true
-script = ExtResource("6_ifxk7")
+script = ExtResource("4_bjtol")
+duration = 20.0
 
 [node name="BoneProjectilesSpawnerComponent" type="Node2D" parent="States/ProjectilePhaseState" index="0"]
 unique_name_in_owner = true
@@ -176,3 +180,22 @@ script = ExtResource("6_ifxk7")
 unique_name_in_owner = true
 script = ExtResource("7_2o11y")
 scene = ExtResource("9_2j0rv")
+
+[node name="TargetedBlasterPhase" type="Node" parent="States" index="3"]
+unique_name_in_owner = true
+script = ExtResource("4_bjtol")
+duration = 6.0
+
+[node name="TargetedBlasterSpawnerComponent" type="Node2D" parent="States/TargetedBlasterPhase" index="0"]
+unique_name_in_owner = true
+script = ExtResource("7_2o11y")
+scene = ExtResource("9_2j0rv")
+
+[node name="BlasterDelayTimer" type="Timer" parent="States/TargetedBlasterPhase" index="1"]
+unique_name_in_owner = true
+one_shot = true
+
+[connection signal="enabled" from="States/ProjectilePhaseState" to="." method="_on_projectile_phase_state_enabled"]
+[connection signal="enabled" from="States/GasterBlasterPhaseState" to="." method="_on_gaster_blaster_phase_state_enabled"]
+[connection signal="enabled" from="States/TargetedBlasterPhase" to="." method="_on_target_blaster_phase_enabled"]
+[connection signal="timeout" from="States/TargetedBlasterPhase/BlasterDelayTimer" to="." method="_on_blaster_delay_timer_timeout"]
